@@ -1,0 +1,50 @@
+<!-- register.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <ul class="nav nav-tabs" id="navId" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a style="color: red" href="/login" class="nav-link" data-bs-toggle="tab">login</a>
+        </li>
+    </ul>
+
+    <div class="container shadow">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <h2  class="text-center">Register</h2>
+                {% if error %}
+                        <div style="background-color: black; color:red;" class="alert alert-danger" id="error">
+                            {{ error }}
+                        </div>
+                {% endif %}
+                <form action="" method="post">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password:</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Register</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

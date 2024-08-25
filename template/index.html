@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatroom</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+</head>
+<body>
+    <ul class="nav nav-tabs" id="navId" role="tablist">
+        <li class="nav-item">
+            <span class="nav-link  disabled" id="username">{{ current_user }}</a>
+        </li>
+        {% if role == "UserRole.super_admin" %}
+        <li class="nav-item" role="presentation">
+            <a style="color: red" href="/admin" class="nav-link" data-bs-toggle="tab">panel admin</a>
+        </li>
+        {% endif %}
+
+        <li class="nav-item" role="presentation">
+            <a style="color: red" href="/logout" class="nav-link" data-bs-toggle="tab">logout</a>
+        </li>
+    </ul>
+
+    <div class="container shadow">
+        <h1 class=>Chatroom</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="chat-log-container">
+                    <div id="chat-log" class="bg-dark text-white p-3"></div>
+                </div>
+                <div class="input-group">
+                    <input id="message-input" type="text" class="form-control" placeholder="Type a message...">
+                    <div class="input-group-append">
+                        <button id="send-button" class="btn btn-dark">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="typing-users" id="typing-users"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        socket.on('messages', function(messages) {
+            messages.forEach(function(message) {
+                document.getElementById('chat-log').innerHTML += '<p>' + message + '</p>';
+            });
+        });
+
+        socket.on('message', (data) => {
+            const messageHTML = `<p>[ ${data.date} | ${data.timestamp} ] ${data.username}: ${data.text}</p>`;
+            document.getElementById('chat-log').innerHTML += messageHTML;
+        });
+
+        document.getElementById('send-button').addEventListener('click', function() {
+            var message = document.getElementById('message-input').value;
+            socket.emit('message', {text: message});
+            document.getElementById('message-input').value = '';
+        });
+
+        socket.on('typing', function(data) {
+            var typingUsers = document.getElementById('typing-users');
+            typingUsers.innerText = data.username + ' is typing...';
+            typingUsers.classList.add('show');
+            setTimeout(function() {
+                typingUsers.classList.remove('show');
+            }, 5000);
+        });
+        
+        socket.on('stop_typing', function(data) {
+            var typingUsers = document.getElementById('typing-users');
+            var children = typingUsers.children;
+            for (var i = 0; i < children.length; i++) {
+                if (children[i].innerHTML === data.username + ' is typing...') {
+                    typingUsers.removeChild(children[i]);
+                    break;
+                }
+            }
+        });
+
+        var typing = false;
+        var timeout = undefined;
+        document.getElementById('send-button').addEventListener('click', function() {
+            var message = document.getElementById('message-input').value.trim();
+            if (message === '') {
+                document.getElementById('send-button').disabled = true;
+                return false; 
+            } else {
+                socket.emit('message', {text: message});
+                document.getElementById('message-input').value = '';
+            }
+        });
+
+        document.getElementById('message-input').addEventListener('input', function() {
+            var message = document.getElementById('message-input').value.trim();
+            if (message === '') {
+                document.getElementById('send-button').disabled = true;
+            } else {
+                document.getElementById('send-button').disabled = false;
+            }
+        });
+
+        document.getElementById('message-input').addEventListener('keydown', function() {
+            if (!typing) {
+                typing = true;
+                socket.emit('typing');
+            }
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                typing = false;
+                socket.emit('stop_typing');
+            }, 2000);
+        });
+
+        const chatBox = document.getElementById('chat-log');
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+    </script>
+    <div id="typing-users"></div>
+</body>
+</html>

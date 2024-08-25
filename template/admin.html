@@ -1,0 +1,66 @@
+<html>
+<head> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <ul class="nav nav-tabs" id="navId" role="tablist">
+      <li class="nav-item">
+          <span class="nav-link  disabled" id="username">{{ current_user.username }}</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a style="color: red" href="/" class="nav-link" data-bs-toggle="tab">home</a>
+      </li>
+
+
+      <li class="nav-item" role="presentation">
+          <a style="color: red" href="/admin" class="nav-link" data-bs-toggle="tab">panel admin</a>
+      </li>
+
+      <li class="nav-item" role="presentation">
+          <a style="color: red" href="/logout" class="nav-link" data-bs-toggle="tab">logout</a>
+      </li>
+  </ul>
+    <div class="container shadow">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lx-12">
+
+        <h1 class="text-center">Admin Panel</h1>
+        <hr>
+        {% block content %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Created Time </th>
+                <th>Create Date </th>
+                <th>role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+                <tr>
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.username }}</td>
+                  <td>{{ user.date }}</td>
+                  <td>{{ user.time }}</td>
+                  <td>{{ user.role }}</td>
+                  <td>
+                    <a class="btn btn-danger" href="{{ url_for('admin_user_edit' , user_id=user.id) }}">Edit</a>
+                    <a href="{{ url_for('admin_user_delete', user_id=user.id) }}" class="btn btn-danger">Delete</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          {% endblock  %}
+        </div>
+
+        </div>
+      </div>
+    </div>
+</body>
+</html>
