@@ -358,14 +358,14 @@ def create_default_admin():
 if __name__ == '__main__':
     if not app.config["KEYS"]:
         private_key, public_key = generate_keys()
-        if "keys" not in os.listdir():
-            mkdir("keys")
-            
-        with open('keys/private_key.pem', 'wb') as f:
-            f.write(private_key)
+    if not os.path.exists("keys"):
+        os.mkdir("keys")
+        
+    with open('keys/private_key.pem', 'wb') as f:
+        f.write(private_key)
 
-        with open('keys/public_key.pem', 'wb') as f:
-            f.write(public_key)
+    with open('keys/public_key.pem', 'wb') as f:
+        f.write(public_key)
             
     with app.app_context():
         db.create_all()
