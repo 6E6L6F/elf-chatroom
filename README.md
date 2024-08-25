@@ -1,11 +1,13 @@
 # Chatroom project
 
-- [X] create a panel admin
-- [-] create a private chat
-- [x] create a style for chatroom
-- [x] set security for sending messages
-- [-] create a profile page for user
-- [-] set permission to chatroom or any users
-- [-] user search menu for admin
+- [X] database sql
+- [x] ui/ux dark-red
+- [x] websocket
+- [X] chat action
+- [X] flask
+- [X] encrypt all chats (AEC Algoritm)
+- [X] panel admin
+   
+
  
 
