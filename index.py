@@ -351,14 +351,16 @@ def handle_stop_typing():
 def create_default_admin():
     if not User.query.filter_by(username='admin').first():
         admin = User(username='admin', role=UserRole.super_admin)
-        admin.set_password('password')
+        admin.set_password('OIFnkjlsdf&*890sd@*(#')
         db.session.add(admin)
         db.session.commit()
     
 if __name__ == '__main__':
     if not app.config["KEYS"]:
         private_key, public_key = generate_keys()
-
+        if "keys" not in os.listdir():
+            mkdir("keys")
+            
         with open('keys/private_key.pem', 'wb') as f:
             f.write(private_key)
 
